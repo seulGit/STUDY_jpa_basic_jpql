@@ -2,6 +2,8 @@ package jpql;
 
 import jakarta.persistence.*;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Table(name = "ORDERS")
 public class Order {
@@ -14,7 +16,7 @@ public class Order {
     @Embedded
     private Address address;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 

@@ -1,5 +1,6 @@
 package jpql;
 
+import MemberType.MemberType;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,24 +17,32 @@ public class JpaMain {
 
         try {
 
-            for (int i = 0; i < 100; i++) {
-                Member member = new Member();
-                member.setUsername("member" + i);
-                member.setAge(i);
-                em.persist(member);
-            }
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setAge(10);
+            member.setType(MemberType.ADMIN);
+            member.setTeam(team);
+
+            em.persist(member);
 
             em.flush();
             em.clear();
 
-            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
-                    .setFirstResult(0)
-                    .setMaxResults(10)
+            String query = "select m.username, 'HELLO', TRUE from Member m " +
+                            "where m.type = :userType";
+
+            List<Object[]> result = em.createQuery(query)
+                    .setParameter("userType", MemberType.ADMIN)
                     .getResultList();
 
-            System.out.println("result.size() = " + result.size());
-            for (Member member1 : result) {
-                System.out.println("member1 = " + member1);
+            for (Object[] objects : result) {
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[1] = " + objects[1]);
+                System.out.println("objects[2] = " + objects[2]);
             }
 
             tx.commit();

@@ -1,6 +1,9 @@
 package jpql;
 
+import MemberType.MemberType;
 import jakarta.persistence.*;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 public class Member {
@@ -11,9 +14,26 @@ public class Member {
     private String username;
     private int age;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
+
+
+    @Enumerated(EnumType.STRING)
+    private MemberType type;
+
+    public MemberType getType() {
+        return type;
+    }
+
+    public void setType(MemberType type) {
+        this.type = type;
+    }
+
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
+    }
 
     public Long getId() {
         return id;
@@ -37,6 +57,14 @@ public class Member {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     @Override
