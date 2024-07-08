@@ -6,6 +6,10 @@ import jakarta.persistence.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
+@NamedQuery(
+        name = "Member.findByUsername",
+        query = "select m from Member m where m.username = :username"
+)
 public class Member {
 
     @Id
